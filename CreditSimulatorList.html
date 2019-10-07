@@ -51,32 +51,47 @@
 				</div>
 				<div class="col-2"></div>
 				<div class="col-4">
-				  <button type="button" class="btn btn-mdb-color">Posgrado</button>
+				  <button type="button" class="btn btn-mdb-color" onclick="doShowPosgrado();">Posgrado</button>
 				</div>
 			  </div>
 			</div>
 			
-			<div class="row justify-content-center mt-5" id="dvPregrado">
+			<div class="row justify-content-around mt-5">
+			  <div class="row justify-content-start">
 			  
-				<div class="col-4">
-					<a href="CreditSimulator.html" class="btn btn-mdb-color">
+				<div class="col-4"id="dvPregrado">
+					<a href="CreditSimulator.html" class="btn btn-mdb-color" style="width: 150%;">
 						<span>Corto Plazo <br/> Estándar</span>						
 					</a>
 				</div>
+				<div class="col-2"></div>
+				<div class="col-4" id="dvPosgrado">
+					<a href="CreditSimulator3.html" class="btn btn-mdb-color" style="width: 150%;">
+						<span>Corto Plazo <br/> Estándar</span>						
+					</a>
+				</div>
+			  </div>			  
 			  
 			</div>
 			
-			<div class="row justify-content-start" id="dvPregrado2">
+			<div class="row justify-content-around mt-5">
+			  <div class="row justify-content-start">
 			  
-				<div class="col-4">
-				</div>
-				<div class="col-4">
-					<a href="CreditSimulator2.html" class="btn btn-mdb-color">
-						<span>Corto Plazo <br/> Primera Cuota Variable</span>						
+				<div class="col-4"id="dvPregrado2">
+					<a href="CreditSimulator2.html" class="btn btn-mdb-color" style="width: 150%;">
+						<span>Corto Plazo <br/> Primera Cuota Variable</span>
 					</a>
 				</div>
+				<div class="col-2"></div>
+				<div class="col-4" id="dvPosgrado2">
+					<a href="CreditSimulator3.html" class="btn btn-mdb-color" style="width: 150%;">
+						<span>Corto Plazo <br/> Primera Cuota Variable</span>
+					</a>
+				</div>
+			  </div>			  
 			  
 			</div>
+			
 			
 		</div>
 		
@@ -94,13 +109,27 @@
   
   <script type="text/javascript">
 		$(document).ready(function() {		
-			$("#dvPregrado").hide();
-			$("#dvPregrado2").hide();
+			$("#dvPregrado").addClass("hideDiv");
+			$("#dvPregrado2").addClass("hideDiv");
+			
+			$("#dvPosgrado").addClass("hideDiv");
+			$("#dvPosgrado2").addClass("hideDiv");
 		});
 		
 		function doShowPregrado() {
-			$("#dvPregrado").show(500);
-			$("#dvPregrado2").show(500);
+			$("#dvPregrado").removeClass("hideDiv");
+			$("#dvPregrado2").removeClass("hideDiv");
+			
+			$("#dvPosgrado").addClass("hideDiv");
+			$("#dvPosgrado2").addClass("hideDiv");
+		}
+		
+		function doShowPosgrado() {
+			$("#dvPosgrado").removeClass("hideDiv");
+			$("#dvPosgrado2").removeClass("hideDiv");
+			
+			$("#dvPregrado").addClass("hideDiv");
+			$("#dvPregrado2").addClass("hideDiv");
 		}
   
   </script>

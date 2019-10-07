@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Simulador Crédito Posgrado - Corto Plazo Estándar</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body class="hidden-sn jave-skin">
+
+  <!--Double navigation-->
+  <header>
+	
+    <!-- Navbar -->
+    <nav class="navbar navbar-toggleable-md navbar-expand-lg scrolling-navbar double-nav">
+      <!-- Breadcrumb-->
+      <div class="breadcrumb-dn mr-auto" style="display: block !important;">
+        <p>Simulador Crédito Posgrado - Corto Plazo Estándar</p>
+      </div>
+      
+    </nav>
+    <!-- /.Navbar -->
+  </header>
+  <!--/.Double navigation-->
+
+  <!--Main Layout-->
+  <main class="pt-3">
+    <div class="container-fluid">
+      
+	  <a class="btn btn-mdb-color" href="CreditSimulatorList.html"><i class="fas fa-arrow-left mr-1"></i> Volver</a>
+	  
+		<div class="row justify-content-start">
+			<div class="col-md-1"></div>
+			<div class="col-md-3">
+				<select id="ddlModalidad" class="mdb-select md-form">
+				  <option value="" disabled selected>Seleccione su periodo académico</option>
+				  <option value="1">Semestral</option>
+				  <option value="2">Anual</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+			</div>
+		</div>
+	  
+	  	<div id="divSim1">
+			
+			<div class="row justify-content-start">
+				<div class="col-md-1"></div>
+				<div class="col-md-3">
+					<!-- Material input -->
+					<div class="md-form">
+					  <input type="text" id="txtValMat1" class="form-control" pattern="^\$\d{1,3}(.\d{3})*(\,\d+)?$" data-type="currency">
+					  <label for="txtValMat1">Valor Matricula</label>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<!-- Material input -->
+					<div class="md-form">
+					  <input type="number" id="txtCuotas1" class="form-control">
+					  <label for="txtCuotas1">Número de Cuotas</label>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row justify-content-start mt-3">
+				<div class="col-md-1"></div>
+				<div class="col-md-3">				
+					<div class="md-form">
+					  <input type="text" id="date-picker-example" class="form-control datepicker">
+					  <label for="date-picker-example">Fecha Vencimiento Factura</label>
+					</div>				
+				</div>
+				
+				<div class="col-md-4 my-auto">
+					<div class="form-check">
+						<input type="checkbox" class="form-check-input" id="chkExtra">
+						<label class="form-check-label" for="chkExtra">¿Marque la casilla si tiene matrícula extraordinaria/recargo?</label>
+					</div>
+				</div>
+				<div class="col-md-3" id="dvExtraO">
+					<!-- Material input -->
+					<div class="md-form">
+					  <input type="text" id="txtExtraO" class="form-control" pattern="^\$\d{1,3}(.\d{3})*(\,\d+)?$" data-type="currency">
+					  <label for="txtExtraO">Valor de su recargo</label>
+					</div>
+				</div>
+			</div>
+						
+			<div class="row justify-content-start mt-4">
+				<div class="col-md-1"></div>
+				<div class="col-md-6">
+					<h5>Tasa de Interés de Financiación: <span class="badge mdb-color" id="interes"></span></h5>
+				</div>
+			</div>
+						
+			<div class="row justify-content-center mt-3" id="tabData">
+				
+				<div class="col-md-8 table-responsive">
+			
+					<table class="table">
+					  <thead class="grey lighten-2">
+						<tr>
+						  <th scope="col" class="text-center">Cuota</th>
+						  <th scope="col">Matrícula</th>
+						  <th scope="col">Interés de Financiación</th>
+						  <th scope="col">Saldo Capital</th>
+						  <th scope="col">Pago Mensual</th>
+						  <th scope="col">Fecha de Pago</th>
+						</tr>
+					  </thead>
+					  <tbody id="tbodResult">
+					  </tbody>
+					  <tfoot class="grey lighten-3">
+						<tr>
+							<th scope="col">Total</th>
+							<th scope="col" id="totMatr"></th>
+							<th scope="col" id="totIntr"></th>
+							<th colspan="3" scope="col"></th>
+						</tr>
+					  </tfoot>
+					  
+					</table>
+				
+				</div>
+			</div>
+		</div>
+	  
+    </div>
+  </main>
+  <!--Main Layout-->
+
+  <!-- SCRIPTS -->
+  <!-- JQuery -->
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="js/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="js/mdb.min.js"></script>
+  
+  <script type="text/javascript">
+  
+		var resultData = [];
+		var minPorc = 0;
+		var maxCuot = 6;
+		var intPorc = 0;
+		var matIniPorc = 0;
+		var diffDias = 0;
+		var cuotIntPorc = 0;
+		
+		var intMat = [];
+		var intCuot = [];
+  
+		$(document).ready(function() {		
+			
+			$.get("https://api.myjson.com/bins/dtzz1", function(data, textStatus, jqXHR) {				
+				$("#interes").text(data.interesSTA + "% M.V.");
+				maxCuot = data.maxCuotasSTA;
+				minPorc = data.minPorcIniSTA;
+				
+				intPorc = ((data.interesSTA / 100)*12)/365;
+				intMat = data.porcMatSTA;
+				intCuot = data.porcIntSTA;
+			});
+			
+			$('.mdb-select').materialSelect();
+			
+			$("#divSim1").hide();
+			
+			$("#dvExtraO").hide();
+						
+			$('.datepicker').pickadate({
+				monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre',
+				'Noviembre', 'Diciembre'],
+				monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+				weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+				showMonthsShort: true,
+				
+				// Accessibility labels
+				labelMonthNext: 'Mes Siguiente',
+				labelMonthPrev: 'Mes Anterior',
+				labelMonthSelect: 'Seleccione un Mes',
+				labelYearSelect: 'Seleccione un Año',
+				today: 'Hoy',
+				clear: 'Limpiar',
+				close: 'Cancelar',
+				hiddenSuffix: 'hidFechaCuota',
+				formatSubmit: 'yyyy-mm-dd',
+				
+				min: true
+			});
+			
+			$(".form-control").change(function() {
+				Calculate();
+			});
+			
+			$("input[data-type='currency']").on({
+				keyup: function() {
+				  formatCurrency($(this));
+				}
+			});
+			
+			$("#ddlModalidad").change(function() {
+				doChangeModalidad(this.value);
+			});
+			
+			$("#chkExtra").change(function() {
+				if(this.checked) {
+					$("#dvExtraO").show(500);
+				} else {
+					$("#dvExtraO").hide(500);
+					$("#txtExtraO").val('').trigger("change");
+				}
+			});
+			
+		});
+		
+		function doChangeModalidad(idMod) {
+			if(idMod == 1) {
+				maxCuot = 6;
+				
+				if($("#txtCuotas1").val() != ""){
+					if(parseInt($("#txtCuotas1").val()) > 6){
+						$("#txtCuotas1").val("6");
+						Calculate();
+					}
+				}
+			} else {
+				maxCuot = 12;
+			}
+			
+			$("#divSim1").show(500);
+		}
+		
+		
+		function Calculate() {
+			
+			var matricula = 0;
+			var newMat = 0;
+			var cuotas = 0;
+			var fecha = "";
+			var matSig = 0;
+			var pagoMens = 0;
+			var intereses = 0;
+			var oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+			var valCuota = 0;
+			
+			var totalMatricula = 0;
+			var totalIntereses = 0;
+			
+			var newMatF = 0;
+			
+			resultData = [];
+			
+			if($("#txtCuotas1").val() != "") {
+				if(maxCuot < parseInt($("#txtCuotas1").val())) {
+					alert("El máximo de cuotas permitidas es " + maxCuot);
+				} else {			
+					if($("#txtValMat1").val() != "" && $("#txtCuotas1").val() != "" && $("input[name='hidFechaCuota']").val() != "")
+					{
+						if($("#txtValMat1").val() != "")
+						{
+							var strM = $("#txtValMat1").val().replace(/\./g, '').replace('$','');
+							matricula = parseInt(strM);
+						}
+
+						if($("#txtCuotas1").val() != "")
+						{
+							cuotas = parseInt($("#txtCuotas1").val());
+						}
+						
+						if($("input[name='hidFechaCuota']").val() != "") 
+						{
+							var parts = $("input[name='hidFechaCuota']").val().split('-');
+							// Please pay attention to the month (parts[1]); JavaScript counts months from 0:
+							// January - 0, February - 1, etc.
+							fecha = new Date(parts[0], parts[1] - 1, parts[2]);
+						}
+						
+						if(maxCuot < cuotas) {
+							alert("El máximo de cuotas permitidas es " + maxCuot);
+						} else {
+						
+						//console.log(matricula);
+						//console.log(cuotas);
+						//console.log(fecha);
+						
+						var dd = fecha.getDate(); 
+						
+						var acumM = fecha.getMonth();
+						var acumY = fecha.getFullYear();
+						var diffDays = 0;
+						
+						var today = doDateToString(fecha);
+						var nextDate = "";
+						var prevDate = fecha;
+						
+						if(cuotas > 6){
+							matIniPorc = 0.10;
+							cuotIntPorc = ((100 / (cuotas - 1)) / 100);
+						} else {
+							matIniPorc = (intMat[cuotas - 2] / 100);
+							cuotIntPorc = (intCuot[cuotas - 2] / 100);
+						}						
+						
+						//Cuota 1
+						if($("#txtExtraO").val() != "") {
+							var strI = $("#txtExtraO").val().replace(/\./g, '').replace('$','');
+							intereses = parseInt(strI);
+						}
+						matSig = matricula - (matricula * matIniPorc);
+						pagoMens = Math.round((matricula * matIniPorc) + intereses);
+						
+						var elem = { Cuota: 1, Matricula: (matricula * matIniPorc), Interes: intereses, Saldo: matSig, Pago: pagoMens, Fecha: today};
+						resultData.push(elem);
+						
+						totalMatricula += (matricula * matIniPorc);
+						
+						if(cuotas > 6){
+							matricula = matSig;
+						}						
+						
+						for(var i = 2; i <= cuotas; i++) {
+							
+							acumM++;
+							
+							if(acumM > 11) {
+								acumM = 0;
+								acumY++;
+							}
+							
+							if(dd >= 30 && acumM != 1){
+								dd = 30;
+							}
+							else if (acumM == 1 && leapYear(acumY)) {
+								if(dd >= 29){
+									dd = 29;
+								}						
+							}
+							else if (acumM == 1 && !leapYear(acumY)) {
+								if(dd >= 28) {
+									dd = 28;
+								}						
+							}
+							
+							nextDate = new Date(acumY, acumM, dd);
+							diffDays = Math.abs((prevDate.getTime() - nextDate.getTime()) / (oneDay));
+							today = doDateToString(nextDate);
+							
+							intereses = Math.round(matSig * intPorc * diffDays);
+							pagoMens = Math.round((matricula * cuotIntPorc) + intereses);
+							matSig = Math.round(matSig - (matricula * cuotIntPorc));
+							
+							totalMatricula += (matricula * cuotIntPorc);
+							totalIntereses += intereses;
+							
+							elem = { Cuota: i, Matricula: (matricula * cuotIntPorc), Interes: intereses, Saldo: matSig, Pago: pagoMens, Fecha: today};	
+							resultData.push(elem);
+							
+							prevDate = nextDate;
+						}
+						
+						doReconstructTable();
+						$("#totMatr").text("$ " + totalMatricula.format(0, 3, '.', ','));
+						$("#totIntr").text("$ " + totalIntereses.format(0, 3, '.', ','));
+						}
+					}
+				}
+			}
+		}
+		
+		function doDateToString(fecha) {
+			var dd = fecha.getDate(); 
+			var mm = fecha.getMonth() + 1; 
+			var yyyy = fecha.getFullYear(); 
+			
+			var acumM = mm;
+			var acumY = yyyy;
+			var diffDays = 0;
+			
+			if (dd < 10) { 
+				dd = '0' + dd; 
+			} 
+			if (mm < 10) { 
+				mm = '0' + mm; 
+			} 
+			var t = dd + '/' + mm + '/' + yyyy;
+			
+			return t;
+		}
+		
+		function leapYear(year){
+			return (year & 3) == 0 && ((year % 25) != 0 || (year & 15) == 0);
+		}
+
+		function doReconstructTable() {
+			var strTR = "";
+			$("#tbodResult").html('');
+			
+			for(var i = 0; i < resultData.length; i++) 
+			{
+				strTR = "<tr><th scope='row' class='text-center'>" + (i + 1).toString() + "</th><td>$ " + resultData[i].Matricula.format(0, 3, '.', ',') + "</td><td>$ " + resultData[i].Interes.format(0, 3, '.', ',') + "</td><td>$ " + resultData[i].Saldo.format(0, 3, '.', ',') + "</td><td><b>$ " + resultData[i].Pago.format(0, 3, '.', ',') + "</b></td><td>" + resultData[i].Fecha + "</td></tr>";
+				$("#tbodResult").append(strTR);
+			}
+		}
+		
+		function formatNumber(n) {
+		  // format number 1000000 to 1,234,567
+		  return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+		}
+
+		function formatCurrency(input, blur) {
+		  // appends $ to value, validates decimal side
+		  // and puts cursor back in right position.
+		  
+		  // get input value
+		  var input_val = input.val();
+		  
+		  // don't validate empty input
+		  if (input_val === "") { return; }
+		  
+		  // original length
+		  var original_len = input_val.length;
+
+		  // initial caret position 
+		  var caret_pos = input.prop("selectionStart");
+			
+		  // check for decimal
+		  if (input_val.indexOf(",") >= 0) {
+
+			// get position of first decimal
+			// this prevents multiple decimals from
+			// being entered
+			var decimal_pos = input_val.indexOf(".");
+
+			// split number by decimal point
+			var left_side = input_val.substring(0, decimal_pos);
+			var right_side = input_val.substring(decimal_pos);
+
+			// add commas to left side of number
+			left_side = formatNumber(left_side);
+
+			// validate right side
+			right_side = formatNumber(right_side);
+			
+			// On blur make sure 2 numbers after decimal
+			if (blur === "blur") {
+			  right_side += "00";
+			}
+			
+			// Limit decimal to only 2 digits
+			right_side = right_side.substring(0, 2);
+
+			// join number by .
+			input_val = "$" + left_side + "." + right_side;
+
+		  } else {
+			// no decimal entered
+			// add commas to number
+			// remove all non-digits
+			input_val = formatNumber(input_val);
+			input_val = "$" + input_val;
+			
+			// final formatting
+			if (blur === "blur") {
+			  //input_val += ".00";
+			}
+		  }
+		  
+		  // send updated string to input
+		  input.val(input_val);
+
+		  // put caret back in the right position
+		  var updated_len = input_val.length;
+		  caret_pos = updated_len - original_len + caret_pos;
+		  input[0].setSelectionRange(caret_pos, caret_pos);
+		}
+
+
+		Number.prototype.format = function (n, x, s, c) {
+            var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
+                num = this.toFixed(Math.max(0, ~~n));
+
+            return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
+        };
+  </script>
+</body>
+
+</html>
