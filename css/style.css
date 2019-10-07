@@ -22,3 +22,7 @@
 .text-jave-blue {
 	color: #2C5697;
 }
+
+.hideDiv {
+	visibility: hidden;
+}
