@@ -47,7 +47,7 @@
 			<div class="row justify-content-around mt-5">
 			  <div class="row justify-content-start">
 				<div class="col-4">
-					<a href="CreditSimulator.html" class="btn btn-mdb-color">Pregrado</a>
+					<button type="button" class="btn btn-mdb-color" onclick="doShowPregrado();">Pregrado</button>
 				</div>
 				<div class="col-2"></div>
 				<div class="col-4">
@@ -55,7 +55,31 @@
 				</div>
 			  </div>
 			</div>
+			
+			<div class="row justify-content-center mt-5" id="dvPregrado">
+			  
+				<div class="col-4">
+					<a href="CreditSimulator.html" class="btn btn-mdb-color">
+						<span>Corto Plazo <br/> Estándar</span>						
+					</a>
+				</div>
+			  
+			</div>
+			
+			<div class="row justify-content-start" id="dvPregrado2">
+			  
+				<div class="col-4">
+				</div>
+				<div class="col-4">
+					<a href="CreditSimulator2.html" class="btn btn-mdb-color">
+						<span>Corto Plazo <br/> Primera Cuota Variable</span>						
+					</a>
+				</div>
+			  
+			</div>
+			
 		</div>
+		
 	</main>
 
   <!-- SCRIPTS -->
@@ -70,8 +94,14 @@
   
   <script type="text/javascript">
 		$(document).ready(function() {		
-		
+			$("#dvPregrado").hide();
+			$("#dvPregrado2").hide();
 		});
+		
+		function doShowPregrado() {
+			$("#dvPregrado").show(500);
+			$("#dvPregrado2").show(500);
+		}
   
   </script>
 </body>

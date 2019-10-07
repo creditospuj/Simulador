@@ -161,6 +161,30 @@
 				<div class="col-md-4"></div>
 			</div>
 			
+			<div class="row justify-content-center mt-3" id="tabData">
+				
+				<div class="col-md-5 table-responsive">
+			
+					<table class="table">
+					  <thead class="grey lighten-2">
+						<tr>
+							<th colspan="3" class="text-center">
+								Porcentaje Valores Consecutivos Matricula por Número de Cuotas - CV
+							</th>
+						</tr>
+						<tr>
+						  <th scope="col"># Cuotas</th>
+						  <th scope="col">Porcentaje</th>
+						  <th></th>
+						</tr>
+					  </thead>
+					  <tbody id="tbodResult3">
+					  </tbody>					  
+					</table>
+				
+				</div>
+				
+			</div>
 			
 			<div class="row justify-content-center mt-3">
 				<div class="col-md-3">
@@ -195,6 +219,8 @@
 		
 		var intMat = [];
 		var intCuot = [];
+		
+		var porcCV = [];
   
 		$(document).ready(function() {		
 			
@@ -203,6 +229,7 @@
 				minPorc = data.minPorcIniSTA;
 				intMat = data.porcMatSTA;
 				intCuot = data.porcIntSTA;
+				porcCV = data.porcsCV;
 				
 				$("#txtInteres").val(data.interesSTA).trigger("change");
 				$("#txtMaxCuotas").val(data.maxCuotasSTA).trigger("change");	
@@ -210,6 +237,7 @@
 				
 				doFillLinesPrimCuota();
 				doFillLinesOtrasCuotas();
+				doFillLinesCV();
 			});
 			
 			
@@ -222,6 +250,7 @@
 			$("#txtMaxCuotas").change(function () {
 				doFillLinesPrimCuotaClean();
 				doFillLinesOtrasCuotasClean();
+				doFillLinesCVClean();
 			});
 		});
 		
@@ -269,6 +298,42 @@
 			}
 		}
 		
+		function doFillLinesCV() {
+			
+			$("#tbodResult3").html('');
+			
+			var strTR = "";
+			var porcLin = "";
+			var cont = 0;
+			maxCuot = parseInt($("#txtMaxCuotas").val());
+			
+			for(var i = 2; i <= maxCuot; i++) {
+			
+				if(porcCV[cont] != undefined){
+					porcLin = porcCV[cont];
+				}
+			
+				strTR = "<tr><td>" + i + "</td><td><input type='number' class='form-control' name='txtPorcOth2' value='" + porcLin + "' /></td></tr>";
+				$("#tbodResult3").append(strTR);
+				
+				cont++;
+			}
+		}
+		
+		function doFillLinesCVClean() {
+			
+			$("#tbodResult3").html('');
+			
+			var strTR = "";
+			var porcLin = "";
+			maxCuot = parseInt($("#txtMaxCuotas").val());
+			
+			for(var i = 2; i <= maxCuot; i++) {
+				strTR = "<tr><td>" + i + "</td><td><input type='number' class='form-control' name='txtPorcOth2' value='" + porcLin + "' /></td></tr>";
+				$("#tbodResult3").append(strTR);
+			}
+		}
+		
 		function doFillLinesPrimCuotaClean() {
 			
 			$("#tbodResult").html('');
@@ -300,6 +365,8 @@
 		function doSaveChanges() {
 			intMat = [];
 			intCuot = [];
+			
+			porcCV = [];
 						
 			$("input[name='txtPorcMat']").each(function() {
 				intMat.push(this.value);
@@ -309,7 +376,11 @@
 				intCuot.push(this.value);
 			});
 			
-			var datUpdated = { maxCuotasSTA: $("#txtMaxCuotas").val(), interesSTA: $("#txtInteres").val(), porcMatSTA: intMat, porcIntSTA: intCuot, porcMinCuot: $("#txtPorcMinCuota").val() };
+			$("input[name='txtPorcOth2']").each(function() {
+				porcCV.push(this.value);
+			});
+			
+			var datUpdated = { maxCuotasSTA: $("#txtMaxCuotas").val(), interesSTA: $("#txtInteres").val(), porcMatSTA: intMat, porcIntSTA: intCuot, porcMinCuot: $("#txtPorcMinCuota").val(), porcsCV: porcCV };
 			var data = JSON.stringify(datUpdated);
 			$.ajax({
 				url:"https://api.myjson.com/bins/dtzz1",
