@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Simulador Crédito Pregrado - Corto Plazo</title>
+  <title>Simulador Crédito Pregrado - Corto Plazo Estándar</title>
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
   <!-- Bootstrap core CSS -->
@@ -25,7 +25,7 @@
     <nav class="navbar navbar-toggleable-md navbar-expand-lg scrolling-navbar double-nav">
       <!-- Breadcrumb-->
       <div class="breadcrumb-dn mr-auto" style="display: block !important;">
-        <p>Simulador Crédito Pregrado - Corto Plazo</p>
+        <p>Simulador Crédito Pregrado - Corto Plazo Estándar</p>
       </div>
       
     </nav>
@@ -40,6 +40,12 @@
 	  	<div id="divSim1">
 			
 			<a class="btn btn-mdb-color" href="CreditSimulatorList.html"><i class="fas fa-arrow-left mr-1"></i> Volver</a>
+			
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center">
+					<img src="https://www.javeriana.edu.co/PortalJaveriana-Theme/HomeJaveriana/images/javeriana/logo_puj.png" alt="logoJaveriana" />
+				</div>
+			</div>
 			
 			<div class="row justify-content-start">
 				<div class="col-md-1"></div>
@@ -99,7 +105,7 @@
 						<tr>
 						  <th scope="col" class="text-center">Cuota</th>
 						  <th scope="col">Matrícula</th>
-						  <th scope="col">Interés de Financiación</th>
+						  <th scope="col" class="text-center">Interés de Financiación* <br />Recargo</th>
 						  <th scope="col">Saldo Capital</th>
 						  <th scope="col">Pago Mensual</th>
 						  <th scope="col">Fecha de Pago</th>
@@ -117,6 +123,15 @@
 					  </tfoot>
 					  
 					</table>
+					
+					<br />
+					
+					<span class="text-justify" style="font-size: 14px; color: #000 !important; font-weight: 400;">
+					
+					* El cálculo de interés de financiación puede variar en función de los días hábiles en los que quedarán fijadas cada una de las cuotas.
+					
+					</span>
+					
 				
 				</div>
 			</div>
@@ -279,6 +294,9 @@
 						resultData.push(elem);
 						
 						totalMatricula += (matricula * matIniPorc);
+						
+						if(intereses > 0)
+							totalIntereses += intereses;
 						
 						for(var i = 2; i <= cuotas; i++) {
 							
